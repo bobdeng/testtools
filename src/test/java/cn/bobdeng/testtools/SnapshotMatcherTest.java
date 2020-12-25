@@ -14,8 +14,19 @@ public class SnapshotMatcherTest {
     public void test_snapshot_string() throws IOException {
         TestForm form = new TestForm("hello");
         assertThat(new Gson().toJson(form), snapshotMatch(this, "snapshot_match"));
+        assertThat(form, snapshotMatch(this, "snapshot_match"));
         TestResource testResource = new TestResource(this, "snapshot_match.snapshot");
         assertThat(testResource.readString(), is(new Gson().toJson(form)));
+    }
+
+    @Test
+    public void test_snapshot_with_object() throws Exception {
+        TestForm form = new TestForm("hello");
+        assertThat(form, snapshotMatch(this, "snapshot_match_with_object"));
+        TestResource testResource = new TestResource(this, "snapshot_match_with_object.snapshot");
+        assertThat(testResource.readString(), is(new Gson().toJson(form)));
+        testResource.delete();
+
     }
 
     @Test(expected = AssertionError.class)
@@ -23,17 +34,18 @@ public class SnapshotMatcherTest {
         TestForm form = new TestForm("hello");
         assertThat(new Gson().toJson(form), snapshotMatch(this, "snapshot_not_match"));
     }
+
     @Test
-    public void create_snapshot_when_first_run(){
+    public void create_snapshot_when_first_run() {
         TestForm form = new TestForm("hello");
         assertThat(new Gson().toJson(form), snapshotMatch(this, "snapshot_first"));
-        new TestResource(this,"snapshot_first.snapshot").delete();
+        new TestResource(this, "snapshot_first.snapshot").delete();
 
     }
+
     @Test(expected = AssertionError.class)
-    public void fail_when_json_parse_fail(){
+    public void fail_when_json_parse_fail() {
         TestForm form = new TestForm("hello");
         assertThat(new Gson().toJson(form), snapshotMatch(this, "snapshot_json_fail"));
-
     }
 }
