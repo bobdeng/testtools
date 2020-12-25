@@ -52,4 +52,8 @@ public class TestResource {
         FileInputStream fileInputStream = new FileInputStream(getFile());
         return ByteStreams.toByteArray(fileInputStream);
     }
+
+    public void delete() {
+        getFile().delete();
+    }
 }
