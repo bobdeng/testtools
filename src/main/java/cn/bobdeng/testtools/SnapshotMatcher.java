@@ -19,6 +19,10 @@ public class SnapshotMatcher extends BaseMatcher<Object> {
         return new SnapshotMatcher(testObject, snapshotName);
     }
 
+    public static SnapshotMatcher matchSnapshot(Object testObject, String snapshotName) {
+        return snapshotMatch(testObject, snapshotName);
+    }
+
     public SnapshotMatcher(Object testObject, String snapshotName) {
         this.testObject = testObject;
         this.snapshotName = snapshotName + ".snapshot";
