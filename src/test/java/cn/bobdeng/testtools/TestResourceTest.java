@@ -40,7 +40,7 @@ public class TestResourceTest {
     }
 
     @Test
-    public void test_file_exist()throws Exception{
+    public void test_file_exist() {
         assertThat(new TestResource(this, "test_read.json").exist(),is(true));
         assertThat(new TestResource(this, "not_exist.json").exist(),is(false));
     }

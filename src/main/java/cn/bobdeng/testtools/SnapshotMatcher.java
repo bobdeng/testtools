@@ -1,7 +1,6 @@
 package cn.bobdeng.testtools;
 
 import com.google.gson.Gson;
-import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.json.JSONException;
@@ -15,23 +14,19 @@ import java.nio.charset.StandardCharsets;
 public class SnapshotMatcher extends BaseMatcher<Object> {
     private final Object testObject;
     private final String snapshotName;
-    private Class clz;
 
-    public SnapshotMatcher(Object testObject, String snapshotName) {
-        this(testObject, snapshotName, null);
+    public static SnapshotMatcher snapshotMatch(Object testObject, String snapshotName) {
+        return new SnapshotMatcher(testObject, snapshotName);
     }
 
-    public SnapshotMatcher(Object testObject, String snapshotName, Class clz) {
+    public SnapshotMatcher(Object testObject, String snapshotName) {
         this.testObject = testObject;
         this.snapshotName = snapshotName + ".snapshot";
-        this.clz = clz;
     }
 
     @Override
     public boolean matches(Object item) {
-        if (this.clz == null) {
-            this.clz = item.getClass();
-        }
+
         TestResource testResource = new TestResource(testObject, snapshotName);
         if (testResource.exist()) {
             return compare(item, testResource);
@@ -42,11 +37,7 @@ public class SnapshotMatcher extends BaseMatcher<Object> {
 
     private boolean compare(Object item, TestResource testResource) {
         try {
-            if (item.getClass() == String.class) {
-                JSONAssert.assertEquals(testResource.readString(), (String) item, false);
-                return true;
-            }
-            JSONAssert.assertEquals(testResource.readString(), new Gson().toJson(item), false);
+            JSONAssert.assertEquals(testResource.readString(), (String) item, false);
             return true;
         } catch (IOException | JSONException e) {
             return false;
