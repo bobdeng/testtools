@@ -24,4 +24,24 @@ public class TestResourceTest {
         testResource.saveObject(testForm);
         assertThat(testResource.readString(), is(new Gson().toJson(testForm)));
     }
+
+    @Test
+    public void should_get_file_when_write() throws Exception {
+        TestResource testResource = new TestResource(this, "test_write_string.json");
+        String content = "hello world!";
+        testResource.save(content);
+        assertThat(testResource.readString(), is(content));
+    }
+    @Test
+    public void should_get_bytes_when_save_bytes()throws Exception{
+        TestResource testResource = new TestResource(this, "test_write_bin.bin");
+        testResource.save("123456".getBytes());
+        assertThat(new String(testResource.readBytes()),is("123456"));
+    }
+
+    @Test
+    public void test_file_exist()throws Exception{
+        assertThat(new TestResource(this, "test_read.json").exist(),is(true));
+        assertThat(new TestResource(this, "not_exist.json").exist(),is(false));
+    }
 }

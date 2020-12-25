@@ -3,10 +3,7 @@ package cn.bobdeng.testtools;
 import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class TestResource {
@@ -49,5 +46,10 @@ public class TestResource {
     public void save(byte[] newImage) throws IOException {
         FileOutputStream outputStream = new FileOutputStream(getFile());
         outputStream.write(newImage);
+    }
+
+    public byte[] readBytes() throws Exception {
+        FileInputStream fileInputStream = new FileInputStream(getFile());
+        return ByteStreams.toByteArray(fileInputStream);
     }
 }
