@@ -56,4 +56,8 @@ public class TestResource {
     public void delete() {
         getFile().delete();
     }
+
+    public <T> T read(Class<T> aClass) throws IOException {
+        return new Gson().fromJson(readString(), aClass);
+    }
 }

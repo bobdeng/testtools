@@ -32,16 +32,23 @@ public class TestResourceTest {
         testResource.save(content);
         assertThat(testResource.readString(), is(content));
     }
+
     @Test
-    public void should_get_bytes_when_save_bytes()throws Exception{
+    public void should_get_bytes_when_save_bytes() throws Exception {
         TestResource testResource = new TestResource(this, "test_write_bin.bin");
         testResource.save("123456".getBytes());
-        assertThat(new String(testResource.readBytes()),is("123456"));
+        assertThat(new String(testResource.readBytes()), is("123456"));
     }
 
     @Test
     public void test_file_exist() {
-        assertThat(new TestResource(this, "test_read.json").exist(),is(true));
-        assertThat(new TestResource(this, "not_exist.json").exist(),is(false));
+        assertThat(new TestResource(this, "test_read.json").exist(), is(true));
+        assertThat(new TestResource(this, "not_exist.json").exist(), is(false));
+    }
+
+    @Test
+    public void read_to_class() throws IOException {
+        TestForm testForm = new TestResource(this, "test_read.json").read(TestForm.class);
+        assertThat(testForm, is(new TestForm("hello")));
     }
 }
