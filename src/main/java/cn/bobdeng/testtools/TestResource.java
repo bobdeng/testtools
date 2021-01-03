@@ -9,10 +9,18 @@ import java.nio.charset.StandardCharsets;
 public class TestResource {
     private final Object testObject;
     private final String fileName;
+    private final String subFolder;
 
     public TestResource(Object testObject, String fileName) {
         this.testObject = testObject;
         this.fileName = fileName;
+        this.subFolder = null;
+    }
+
+    public TestResource(Object testObject, String fileName, String subFolder) {
+        this.testObject = testObject;
+        this.fileName = fileName;
+        this.subFolder = subFolder;
     }
 
     public boolean exist() {
@@ -20,8 +28,15 @@ public class TestResource {
     }
 
     public File getFile() {
-        File file = new File("src/test/java/" + testObject.getClass().getPackage().getName().replaceAll("\\.", File.separator) + "/" + fileName);
-        return file;
+        File folder = new File("src/test/java/" + testObject.getClass().getPackage().getName().replaceAll("\\.", File.separator));
+        if (subFolder != null) {
+            folder = new File(folder, subFolder);
+        }
+        if (!folder.exists()) {
+            boolean success = folder.mkdirs();
+            assert success;
+        }
+        return new File(folder, fileName);
     }
 
     private String getContent() throws IOException {

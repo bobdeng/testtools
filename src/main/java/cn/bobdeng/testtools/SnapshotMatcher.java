@@ -30,7 +30,7 @@ public class SnapshotMatcher extends BaseMatcher<Object> {
 
     @Override
     public boolean matches(Object item) {
-        TestResource testResource = new TestResource(testObject, snapshotName);
+        TestResource testResource = getTestResource();
         if (testResource.exist()) {
             return compare(item, testResource);
         }
@@ -60,7 +60,7 @@ public class SnapshotMatcher extends BaseMatcher<Object> {
     }
 
     private void saveJson(Object item) throws IOException {
-        File file = new TestResource(testObject, snapshotName).getFile();
+        File file = getTestResource().getFile();
         FileOutputStream fileOutputStream = new FileOutputStream(file);
         if (item.getClass() == String.class) {
             fileOutputStream.write(((String) item).getBytes(StandardCharsets.UTF_8));
@@ -69,9 +69,13 @@ public class SnapshotMatcher extends BaseMatcher<Object> {
         fileOutputStream.write((new Gson().toJson(item)).getBytes(StandardCharsets.UTF_8));
     }
 
+    private TestResource getTestResource() {
+        return new TestResource(testObject, snapshotName, "_snapshots_");
+    }
+
     @Override
     public void describeTo(Description description) {
-        TestResource testResource = new TestResource(testObject, snapshotName);
+        TestResource testResource = getTestResource();
         try {
             description.appendText(testResource.readString());
         } catch (IOException e) {

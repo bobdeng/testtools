@@ -3,6 +3,7 @@ package cn.bobdeng.testtools;
 import com.google.gson.Gson;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -50,5 +51,11 @@ public class TestResourceTest {
     public void read_to_class() throws IOException {
         TestForm testForm = new TestResource(this, "test_read.json").read(TestForm.class);
         assertThat(testForm, is(new TestForm("hello")));
+    }
+
+    @Test
+    public void Given有子目录_When写入测试文件_Then写到子目录去() throws IOException {
+        TestResource testResource = new TestResource(this, File.separator + "abc.snapshot","_snapshots_");
+        testResource.saveObject(new TestForm("sub folder"));
     }
 }
