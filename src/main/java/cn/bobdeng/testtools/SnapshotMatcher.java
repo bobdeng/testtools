@@ -14,19 +14,22 @@ import java.nio.charset.StandardCharsets;
 public class SnapshotMatcher extends BaseMatcher<Object> {
     private final Object testObject;
     private final String snapshotName;
+    private final boolean strict;
 
     public static SnapshotMatcher snapshotMatch(Object testObject, String snapshotName) {
-        return new SnapshotMatcher(testObject, snapshotName);
+        return new SnapshotMatcher(testObject, snapshotName, false);
     }
 
-    public static SnapshotMatcher matchSnapshot(Object testObject, String snapshotName) {
-        return snapshotMatch(testObject, snapshotName);
+    public static SnapshotMatcher snapshotMatchStrict(Object testObject, String snapshotName) {
+        return new SnapshotMatcher(testObject, snapshotName, true);
     }
 
-    public SnapshotMatcher(Object testObject, String snapshotName) {
+    public SnapshotMatcher(Object testObject, String snapshotName, boolean strict) {
         this.testObject = testObject;
-        this.snapshotName = snapshotName + ".snapshot";
+        this.snapshotName = snapshotName;
+        this.strict = strict;
     }
+
 
     @Override
     public boolean matches(Object item) {
@@ -41,10 +44,10 @@ public class SnapshotMatcher extends BaseMatcher<Object> {
     private boolean compare(Object item, TestResource testResource) {
         try {
             if (item.getClass() == String.class) {
-                JSONAssert.assertEquals(testResource.readString(), (String) item, false);
+                JSONAssert.assertEquals(testResource.readString(), (String) item, strict);
                 return true;
             }
-            JSONAssert.assertEquals(testResource.readString(), new Gson().toJson(item), false);
+            JSONAssert.assertEquals(testResource.readString(), new Gson().toJson(item), strict);
             return true;
         } catch (IOException | JSONException e) {
             return false;
@@ -70,7 +73,7 @@ public class SnapshotMatcher extends BaseMatcher<Object> {
     }
 
     private TestResource getTestResource() {
-        return new TestResource(testObject, snapshotName, "_snapshots_");
+        return new TestResource(testObject, snapshotName + ".snapshot", "_snapshots_");
     }
 
     @Override
