@@ -11,6 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestResourceTest {
 
+
     @Test
     public void should_read_json() throws IOException {
         TestResource testResource = new TestResource(this, "test_read.json");
@@ -55,7 +56,15 @@ public class TestResourceTest {
 
     @Test
     public void Given有子目录_When写入测试文件_Then写到子目录去() throws IOException {
-        TestResource testResource = new TestResource(this, File.separator + "abc.snapshot","_snapshots_");
+        TestResource testResource = new TestResource(this, File.separator + "abc.snapshot", "_snapshots_");
         testResource.saveObject(new TestForm("sub folder"));
     }
+
+    @Test
+    public void read_at_win() throws IOException {
+        File folder = new TestResourceForWindows(this, "test_read.json").getFolder();
+        assertThat(folder.getPath(), is("src\\test\\java\\cn\\bobdeng\\testtools"));
+    }
+
+
 }

@@ -28,7 +28,7 @@ public class TestResource {
     }
 
     public File getFile() {
-        File folder = new File("src" + File.separator + "test" + File.separator + "java" + File.separator + testObject.getClass().getPackage().getName().replaceAll("\\.", File.separator));
+        File folder = getFolder();
         if (subFolder != null) {
             folder = new File(folder, subFolder);
         }
@@ -37,6 +37,18 @@ public class TestResource {
             assert success;
         }
         return new File(folder, fileName);
+    }
+
+    public File getFolder() {
+        String replacement = fileSeparator();
+        if (replacement.equals("\\")) {
+            replacement = "\\\\";
+        }
+        return new File("src" + fileSeparator() + "test" + fileSeparator() + "java" + fileSeparator() + testObject.getClass().getPackage().getName().replaceAll("\\.", replacement));
+    }
+
+    protected String fileSeparator() {
+        return File.separator;
     }
 
     private String getContent() throws IOException {
