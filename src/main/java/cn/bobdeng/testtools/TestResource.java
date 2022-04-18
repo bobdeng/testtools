@@ -28,7 +28,7 @@ public class TestResource {
     }
 
     public File getFile() {
-        File folder = new File("src/test/java/" + testObject.getClass().getPackage().getName().replaceAll("\\.", File.separator));
+        File folder = new File("src" + File.separator + "test" + File.separator + "java" + File.separator + testObject.getClass().getPackage().getName().replaceAll("\\.", File.separator));
         if (subFolder != null) {
             folder = new File(folder, subFolder);
         }
